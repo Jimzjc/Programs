@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Angle of View & Distance Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Camera Field of View & Distance Calculator</h1>
+    
+    <div class="container">
+        <label for="focalLength">Focal Length (mm):</label>
+        <input type="number" id="focalLength" placeholder="Enter focal length in mm" required>
+
+        <label for="personHeight">Person's Height (cm):</label>
+        <input type="number" id="personHeight" placeholder="Enter person's height in cm" required>
+
+        <button onclick="calculate()">Calculate</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            // Get user inputs
+            const focalLength = parseFloat(document.getElementById('focalLength').value);
+            const personHeight = parseFloat(document.getElementById('personHeight').value);
+
+            // Full-frame sensor dimensions (in mm)
+            const sensorWidth = 36;
+            const sensorHeight = 24;
+
+            // Check if inputs are valid
+            if (isNaN(focalLength) || isNaN(personHeight) || focalLength <= 0 || personHeight <= 0) {
+                alert("Please enter valid numbers for both focal length and person's height.");
+                return;
+            }
+
+            // Calculate the horizontal and vertical angle of view (AOV) in degrees
+            const aovHorizontal = 2 * Math.atan(sensorWidth / (2 * focalLength)) * (180 / Math.PI);
+            const aovVertical = 2 * Math.atan(sensorHeight / (2 * focalLength)) * (180 / Math.PI);
+
+            // Convert person height from cm to mm
+            const personHeightMm = personHeight * 10;
+
+            // Calculate the distance required to fill the frame with the person's height
+            const distance = (personHeightMm * focalLength) / sensorHeight; // In mm
+            const distanceInMeters = distance / 1000; // Convert to meters
+
+            // Display results
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <p><strong>Horizontal Angle of View:</strong> ${aovHorizontal.toFixed(2)}°</p>
+                <p><strong>Vertical Angle of View:</strong> ${aovVertical.toFixed(2)}°</p>
+                <p><strong>Distance to the person to fill the frame:</strong> ${distanceInMeters.toFixed(2)} meters</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
